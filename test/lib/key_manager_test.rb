@@ -20,9 +20,13 @@ class KeyManagerTest < ActiveSupport::TestCase
   teardown do
     FileUtils.rm_rf(@test_dir)
 
+    # Capture in local variables so the block closure can access them
+    original_private_key_path = @original_private_key_path
+    original_jwk_path = @original_jwk_path
+
     # Restore original paths
-    OmniAuth::Atproto::KeyManager.define_singleton_method(:private_key_path) { @original_private_key_path }
-    OmniAuth::Atproto::KeyManager.define_singleton_method(:jwk_path) { @original_jwk_path }
+    OmniAuth::Atproto::KeyManager.define_singleton_method(:private_key_path) { original_private_key_path }
+    OmniAuth::Atproto::KeyManager.define_singleton_method(:jwk_path) { original_jwk_path }
   end
 
   test "generate_keys creates private key file" do

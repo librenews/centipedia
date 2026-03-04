@@ -466,5 +466,8 @@ DEPENDENCIES
   web-console
   webmock
 
+RUBY VERSION
+   ruby 3.4.8p72
+
 BUNDLED WITH
    2.7.2
