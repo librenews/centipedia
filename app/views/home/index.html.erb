@@ -1,0 +1,67 @@
+<% if logged_in? %>
+  <%# ===== Dashboard (Logged In) ===== %>
+  <h1>Dashboard</h1>
+
+  <div class="profile-card" id="profile-card">
+    <img src="<%= current_user.avatar_display_url %>"
+         alt="<%= current_user.display_name %>'s avatar"
+         class="profile-avatar"
+         id="profile-avatar">
+    <div class="profile-info">
+      <h2><%= current_user.display_name || current_user.handle %></h2>
+      <div class="profile-handle">@<%= current_user.handle %></div>
+      <div class="profile-did"><%= current_user.did %></div>
+    </div>
+  </div>
+
+  <div class="test-post-section" id="test-post-section">
+    <h2>Test PDS Write Access</h2>
+    <p>Create a test post on Bluesky to verify your account has write privileges.</p>
+
+    <%= form_with url: test_post_path, method: :post, local: true do |f| %>
+      <div class="form-group">
+        <label for="post_text">Post text</label>
+        <textarea name="post_text" id="post_text" placeholder="Hello from Centipedia! 🔬📖"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submit-post">Post to Bluesky</button>
+      </div>
+    <% end %>
+  </div>
+
+<% else %>
+  <%# ===== Landing Page (Logged Out) ===== %>
+  <div class="hero">
+    <h1>Centipedia</h1>
+    <p class="hero-subtitle">
+      A deterministic, evidence-weighted knowledge synthesis system.
+      Humans submit sources. A public rubric weights them.
+      AI deterministically synthesizes the result.
+    </p>
+  </div>
+
+  <div class="login-section" id="login-section">
+    <h2>Connect with Bluesky</h2>
+
+    <%= form_with url: start_bluesky_auth_path, method: :post, local: true do |f| %>
+      <div class="form-group">
+        <label for="handle">Your Bluesky handle</label>
+        <input type="text" name="handle" id="handle" placeholder="username.bsky.social" autocomplete="off" autofocus>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" id="submit-login">Connect with Bluesky</button>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="principles">
+    <h2>Core Principles</h2>
+    <ol>
+      <li>Only AI writes articles — from submitted, validated citations only.</li>
+      <li>Humans influence inputs (citations, votes), not prose.</li>
+      <li>Citation weighting follows a public, versioned rubric.</li>
+      <li>All outputs are deterministic, auditable, and reproducible.</li>
+      <li>Identity is signed and persistent via the AT Protocol.</li>
+    </ol>
+  </div>
+<% end %>

@@ -1,0 +1,29 @@
+alice:
+  did: "did:plc:alice123"
+  handle: "alice.bsky.social"
+  display_name: "Alice"
+  avatar_url: "https://cdn.bsky.app/img/avatar/alice.jpg"
+  pds_endpoint: "https://puffin.us-east.host.bsky.network"
+  access_token: "eyJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJodHRwczovL3B1ZmZpbi51cy1lYXN0Lmhvc3QuYnNreS5uZXR3b3JrIiwic3ViIjoiZGlkOnBsYzphbGljZTEyMyIsImlhdCI6MTcwOTU0NTYwMCwiZXhwIjoxNzA5NTQ5MjAwfQ.fake_signature"
+  refresh_token: "refresh_token_alice"
+  token_expires_at: "<%= 1.hour.from_now.to_fs(:db) %>"
+
+bob:
+  did: "did:plc:bob456"
+  handle: "bob.bsky.social"
+  display_name: "Bob"
+  avatar_url: ~
+  pds_endpoint: "https://bsky.social"
+  access_token: ~
+  refresh_token: ~
+  token_expires_at: ~
+
+expired_user:
+  did: "did:plc:expired789"
+  handle: "expired.bsky.social"
+  display_name: "Expired User"
+  avatar_url: ~
+  pds_endpoint: "https://bsky.social"
+  access_token: "expired_token"
+  refresh_token: "expired_refresh"
+  token_expires_at: "<%= 1.hour.ago.to_fs(:db) %>"
