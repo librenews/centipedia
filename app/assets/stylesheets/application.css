@@ -682,3 +682,65 @@ p {
   font-size: 0.8125rem;
   color: var(--color-text-muted);
 }
+
+/* --- Agent Panel --- */
+.agent-panel {
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--color-border-light);
+}
+
+.agent-panel h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.agent-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.agent-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0.25em 0.75em;
+  background: var(--color-accent-light);
+  border: 1px solid var(--color-header-border);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-accent);
+  cursor: default;
+}
+
+/* --- Disagreement Callout --- */
+.disagreement-callout {
+  margin-top: var(--space-lg);
+  padding: var(--space-md);
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: var(--radius-md);
+  border-left: 4px solid #ffa000;
+}
+
+.disagreement-callout h4 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+  color: #e65100;
+}
+
+.disagreement-callout ul {
+  padding-left: var(--space-lg);
+  margin: 0;
+}
+
+.disagreement-callout li {
+  font-size: 0.875rem;
+  color: var(--color-text);
+  margin-bottom: var(--space-xs);
+}

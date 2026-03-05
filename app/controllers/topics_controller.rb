@@ -33,11 +33,17 @@ class TopicsController < ApplicationController
   def synthesize
     @topic = Topic.find_by!(slug: params[:slug])
 
-    service = AiSynthesisService.new(@topic)
-    service.synthesize!
+    citations = @topic.citation_events
+      .where.not(total_weight: nil)
+      .includes(source: :domain)
+      .order(total_weight: :desc)
+      .limit(20)
+
+    pipeline = AgentPipeline.new(topic: @topic, citations: citations)
+    pipeline.run!
 
     redirect_to topic_path(@topic), notice: "Synthesis complete! The article has been updated."
-  rescue AiSynthesisService::SynthesisError => e
+  rescue AgentPipeline::PipelineError, BaseAgent::AgentError => e
     redirect_to topic_path(@topic), alert: "Synthesis failed: #{e.message}"
   end
 

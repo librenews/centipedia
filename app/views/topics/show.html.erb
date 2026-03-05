@@ -22,6 +22,33 @@
         <% end %>
       <% end %>
     </div>
+
+    <% if @article.metadata.present? %>
+      <% disagreements = @article.metadata["disagreements"] || [] %>
+      <% if disagreements.any? %>
+        <div class="disagreement-callout">
+          <h4>⚠️ Disagreements Detected</h4>
+          <ul>
+            <% disagreements.each do |d| %>
+              <li><%= d["description"] %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <% agents = @article.metadata["agents"] || [] %>
+      <% if agents.any? %>
+        <div class="agent-panel">
+          <h4>Agents Involved</h4>
+          <div class="agent-list">
+            <% agents.each do |agent| %>
+              <span class="agent-badge" title="<%= agent['description'] %>">🤖 <%= agent["name"] %></span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
     <p class="synthesis-meta">
       <small>Generated using Rubric v<%= @article.rubric_version %> · <%= @article.created_at.strftime("%B %d, %Y at %H:%M UTC") %></small>
     </p>

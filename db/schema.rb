@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_05_125809) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_05_185848) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -46,6 +46,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_05_125809) do
   create_table "articles", force: :cascade do |t|
     t.jsonb "content", default: [], null: false
     t.datetime "created_at", null: false
+    t.jsonb "metadata"
     t.string "rubric_version", null: false
     t.string "status", default: "draft", null: false
     t.bigint "topic_id", null: false
