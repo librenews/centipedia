@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  resources :topics, only: [ :index, :show ], param: :slug do
+  resources :topics, only: [ :index, :show, :new, :create ], param: :slug do
     resources :citation_events, only: [ :new, :create ]
+    post :synthesize, on: :member
   end
   get "/rubric", to: "rubric#index"
   # Health check

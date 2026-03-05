@@ -30,6 +30,11 @@
       <p><em>AI synthesis will appear here once enough citations have been scored and the synthesis engine runs.</em></p>
     </div>
   <% end %>
+  <% if logged_in? %>
+    <div class="actions" style="margin-top: 1rem;">
+      <%= button_to "Regenerate Synthesis", synthesize_topic_path(@topic), method: :post, class: "btn btn-primary", data: { confirm: "This will re-synthesize the article from the current citations. Continue?" } %>
+    </div>
+  <% end %>
 </div>
 
 <div class="content-block citations-section">

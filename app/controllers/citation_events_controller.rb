@@ -8,9 +8,16 @@ class CitationEventsController < ApplicationController
   def create
     @topic = Topic.find_by!(slug: params[:topic_slug])
 
-    # In V1 MVP, the Scorer Service isn't built yet, so we just mock the source and scoring for now
-    # to complete the UI loop
+    service = CitationSubmissionService.new(
+      url: params[:canonical_url],
+      topic: @topic,
+      user: current_user
+    )
 
-    redirect_to topic_path(@topic), notice: "Citation submitted successfully! It is now queued for deterministic scoring."
+    citation_event = service.submit!
+
+    redirect_to topic_path(@topic), notice: "Citation submitted and scored! Weight: #{citation_event.total_weight}"
+  rescue CitationSubmissionService::SubmissionError, UrlFetcherService::FetchError => e
+    redirect_to new_topic_citation_event_path(@topic), alert: "Submission failed: #{e.message}"
   end
 end
