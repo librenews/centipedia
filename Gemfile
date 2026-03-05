@@ -69,3 +69,5 @@ gem "redcarpet", "~> 3.6"
 
 gem "nokogiri", "~> 1.19"
 gem "httparty", "~> 0.24.2"
+
+gem "ruby-openai", "~> 8.3"

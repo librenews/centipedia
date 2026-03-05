@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_05_114116) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_05_125809) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -41,6 +41,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_05_114116) do
     t.integer "version", null: false
     t.index ["cached_article_id", "version"], name: "index_article_versions_on_cached_article_id_and_version", unique: true
     t.index ["cached_article_id"], name: "index_article_versions_on_cached_article_id"
+  end
+
+  create_table "articles", force: :cascade do |t|
+    t.jsonb "content", default: [], null: false
+    t.datetime "created_at", null: false
+    t.string "rubric_version", null: false
+    t.string "status", default: "draft", null: false
+    t.bigint "topic_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["topic_id"], name: "index_articles_on_topic_id"
   end
 
   create_table "cached_articles", force: :cascade do |t|
@@ -102,6 +112,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_05_114116) do
   end
 
   create_table "sources", force: :cascade do |t|
+    t.string "article_author"
+    t.text "article_content"
+    t.string "article_title"
     t.string "canonical_url", null: false
     t.string "content_hash"
     t.datetime "created_at", null: false
@@ -148,6 +161,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_05_114116) do
   end
 
   add_foreign_key "article_versions", "cached_articles"
+  add_foreign_key "articles", "topics"
   add_foreign_key "citation_events", "sources"
   add_foreign_key "citation_events", "topics"
   add_foreign_key "citation_events", "users"

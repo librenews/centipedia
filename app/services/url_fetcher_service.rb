@@ -48,6 +48,23 @@ class UrlFetcherService
     raise FetchError, "Network error while fetching URL: #{e.message}"
   end
 
+  # Fetches, extracts, and persists the content back onto a Source record.
+  def fetch_and_persist!(source)
+    result = fetch_and_extract
+
+    source.update!(
+      article_title: result[:title],
+      article_content: result[:text],
+      content_hash: Digest::SHA256.hexdigest(result[:text]),
+      status: "live"
+    )
+
+    result
+  rescue FetchError => e
+    source.update!(status: "dead")
+    raise e
+  end
+
   private
 
   def default_headers

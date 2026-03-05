@@ -5,14 +5,36 @@
 
 <div class="content-block ai-synthesis">
   <h2>Synthesis</h2>
-  <div class="synthesis-content">
-    <p><em>AI synthesis will appear here once the scoring pipeline is complete.</em></p>
-  </div>
+  <% if @article %>
+    <div class="synthesis-content">
+      <% @article.content.each do |section| %>
+        <h3><%= section["section"] %></h3>
+        <% section["claims"].each do |claim| %>
+          <p>
+            <%= claim["text"] %>
+            <% (claim["citation_event_ids"] || []).each do |ce_id| %>
+              <% footnote_num = @citation_index[ce_id] %>
+              <% if footnote_num %>
+                <sup><a href="#citation-<%= ce_id %>" class="footnote-link">[<%= footnote_num %>]</a></sup>
+              <% end %>
+            <% end %>
+          </p>
+        <% end %>
+      <% end %>
+    </div>
+    <p class="synthesis-meta">
+      <small>Generated using Rubric v<%= @article.rubric_version %> · <%= @article.created_at.strftime("%B %d, %Y at %H:%M UTC") %></small>
+    </p>
+  <% else %>
+    <div class="synthesis-content">
+      <p><em>AI synthesis will appear here once enough citations have been scored and the synthesis engine runs.</em></p>
+    </div>
+  <% end %>
 </div>
 
 <div class="content-block citations-section">
   <h2>Citations & Evidence</h2>
-  <p class="subtitle">Ranked deterministically by the <a href="/rubric">Centipedia Rubric</a>.</p>
+  <p class="subtitle">Ranked deterministically by the <%= link_to "Centipedia Rubric", rubric_path %>.</p>
   
   <div class="actions">
     <%= link_to "Submit Evidence", new_topic_citation_event_path(@topic), class: "btn" %>
@@ -20,14 +42,15 @@
 
   <% if @citations.any? %>
     <div class="citations-list">
-      <% @citations.each do |citation| %>
-        <div class="citation-card">
+      <% @citations.each_with_index do |citation, index| %>
+        <div class="citation-card" id="citation-<%= citation.id %>">
+          <span class="footnote-number">[<%= index + 1 %>]</span>
           <div class="citation-meta">
             <span class="citation-domain"><%= citation.source.domain.host %></span>
-            <span class="citation-weight">Weight: <%= citation.total_weight || "Pending" %></span>
+            <span class="citation-weight">Weight: <%= citation.total_weight %></span>
           </div>
           <a href="<%= citation.source.canonical_url %>" class="citation-link" target="_blank" rel="noopener">
-            <%= citation.source.canonical_url %>
+            <%= citation.source.article_title.present? ? citation.source.article_title : citation.source.canonical_url %>
           </a>
           <div class="citation-details">
             <small>Submitted by @<%= citation.user.handle %></small>
