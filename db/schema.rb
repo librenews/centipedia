@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_04_132449) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_05_114116) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -65,6 +65,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_04_132449) do
     t.index ["status"], name: "index_cached_articles_on_status"
   end
 
+  create_table "citation_events", force: :cascade do |t|
+    t.decimal "corroboration_multiplier", precision: 5, scale: 2, null: false
+    t.datetime "created_at", null: false
+    t.decimal "domain_multiplier", precision: 5, scale: 2, null: false
+    t.string "event_type", null: false
+    t.string "rubric_version", null: false
+    t.bigint "source_id", null: false
+    t.bigint "topic_id", null: false
+    t.decimal "total_weight", precision: 8, scale: 2, null: false
+    t.datetime "updated_at", null: false
+    t.decimal "url_base_score", precision: 5, scale: 2, null: false
+    t.bigint "user_id", null: false
+    t.index ["source_id"], name: "index_citation_events_on_source_id"
+    t.index ["topic_id"], name: "index_citation_events_on_topic_id"
+    t.index ["user_id"], name: "index_citation_events_on_user_id"
+  end
+
+  create_table "domains", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "host", null: false
+    t.decimal "reputation_modifier", precision: 5, scale: 2, default: "1.0", null: false
+    t.datetime "updated_at", null: false
+    t.index ["host"], name: "index_domains_on_host", unique: true
+  end
+
   create_table "feedbacks", force: :cascade do |t|
     t.bigint "cached_article_id", null: false
     t.text "comment"
@@ -74,6 +99,38 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_04_132449) do
     t.datetime "updated_at", null: false
     t.index ["cached_article_id"], name: "index_feedbacks_on_cached_article_id"
     t.index ["rating"], name: "index_feedbacks_on_rating"
+  end
+
+  create_table "sources", force: :cascade do |t|
+    t.string "canonical_url", null: false
+    t.string "content_hash"
+    t.datetime "created_at", null: false
+    t.bigint "domain_id", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.decimal "url_base_score", precision: 5, scale: 2
+    t.index ["canonical_url"], name: "index_sources_on_canonical_url", unique: true
+    t.index ["domain_id"], name: "index_sources_on_domain_id"
+  end
+
+  create_table "topics", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "slug", null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_topics_on_slug", unique: true
+  end
+
+  create_table "trust_scores", force: :cascade do |t|
+    t.bigint "citation_event_id"
+    t.datetime "created_at", null: false
+    t.bigint "domain_id", null: false
+    t.text "reason", null: false
+    t.decimal "score_change", precision: 5, scale: 2, null: false
+    t.datetime "updated_at", null: false
+    t.index ["citation_event_id"], name: "index_trust_scores_on_citation_event_id"
+    t.index ["domain_id"], name: "index_trust_scores_on_domain_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -91,5 +148,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_04_132449) do
   end
 
   add_foreign_key "article_versions", "cached_articles"
+  add_foreign_key "citation_events", "sources"
+  add_foreign_key "citation_events", "topics"
+  add_foreign_key "citation_events", "users"
   add_foreign_key "feedbacks", "cached_articles"
+  add_foreign_key "sources", "domains"
+  add_foreign_key "trust_scores", "citation_events"
+  add_foreign_key "trust_scores", "domains"
 end

@@ -1,0 +1,41 @@
+<div class="content-block topic-header">
+  <h1><%= @topic.title %></h1>
+  <p class="topic-description"><%= @topic.description %></p>
+</div>
+
+<div class="content-block ai-synthesis">
+  <h2>Synthesis</h2>
+  <div class="synthesis-content">
+    <p><em>AI synthesis will appear here once the scoring pipeline is complete.</em></p>
+  </div>
+</div>
+
+<div class="content-block citations-section">
+  <h2>Citations & Evidence</h2>
+  <p class="subtitle">Ranked deterministically by the <a href="/rubric">Centipedia Rubric</a>.</p>
+  
+  <div class="actions">
+    <%= link_to "Submit Evidence", new_topic_citation_event_path(@topic), class: "btn" %>
+  </div>
+
+  <% if @citations.any? %>
+    <div class="citations-list">
+      <% @citations.each do |citation| %>
+        <div class="citation-card">
+          <div class="citation-meta">
+            <span class="citation-domain"><%= citation.source.domain.host %></span>
+            <span class="citation-weight">Weight: <%= citation.total_weight || "Pending" %></span>
+          </div>
+          <a href="<%= citation.source.canonical_url %>" class="citation-link" target="_blank" rel="noopener">
+            <%= citation.source.canonical_url %>
+          </a>
+          <div class="citation-details">
+            <small>Submitted by @<%= citation.user.handle %></small>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No evidence has been submitted for this topic yet. Be the first!</p>
+  <% end %>
+</div>

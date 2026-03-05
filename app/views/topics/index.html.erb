@@ -1,0 +1,17 @@
+<div class="content-block">
+  <h1>Topics</h1>
+  <p class="subtitle">Latest subjects synthesizing active evidence.</p>
+
+  <% if @topics.any? %>
+    <ul class="topic-list">
+      <% @topics.each do |topic| %>
+        <li class="topic-item">
+          <%= link_to topic.title, topic_path(topic), class: "topic-title-link" %>
+          <p class="topic-description"><%= topic.description %></p>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No topics have been created yet.</p>
+  <% end %>
+</div>

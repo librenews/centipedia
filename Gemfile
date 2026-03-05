@@ -64,3 +64,8 @@ gem "omniauth-atproto"
 gem "omniauth-rails_csrf_protection"
 gem "jwt"
 gem "faraday"
+
+gem "redcarpet", "~> 3.6"
+
+gem "nokogiri", "~> 1.19"
+gem "httparty", "~> 0.24.2"

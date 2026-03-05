@@ -21,6 +21,7 @@
           <span class="logo-text">Centipedia</span>
         </a>
         <nav class="site-nav">
+          <%= link_to "The Rubric", rubric_path, class: "nav-link" %>
           <% if logged_in? %>
             <div class="user-badge">
               <img src="<%= current_user.avatar_display_url %>" alt="Avatar" class="nav-avatar">

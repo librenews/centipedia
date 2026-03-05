@@ -58,26 +58,41 @@ Periodic Re-evaluation
 
 ## 4. Identity Layer
 
-Requirements: - Persistent identity per user - Signed authentication -
-Prevent trivial multi-account abuse - Extensible to decentralized
-identity systems
+Requirements:
+- Persistent identity per user
+- Signed authentication
+- Prevent trivial multi-account abuse
+- **Abstracted Identity Model:** Identity must not be hardwired to a single platform. The model should reflect `did`, `provider` (e.g., atproto, nostr), and `public_key`.
+- Extensible to decentralized identity systems
 
-The identity layer must support: - Unique user identifier - Reputation
-tracking - Vote history - Citation submission history
+The identity layer must support:
+- Unique user identifier
+- Reputation tracking
+- Vote history
+- Citation submission history
 
 ------------------------------------------------------------------------
 
 ## 5. Citation System
 
-Each citation must include:
+The system cleanly separates the canonical resource from the act of sharing it to future-proof against noisy social ingestion.
 
--   URL
--   Extracted text content snapshot
--   Source metadata (title, author, publish date)
--   Submission timestamp
--   Submitter identity
+### 5.1 Source (The Canonical Resource)
+Represents the URL-level entity independent of how it entered the system.
+- `canonical_url`, `domain`, `title`
+- `first_seen_at`, `last_checked_at`
+- `content_hash`
+- `status` (live, dead, redirected)
 
-### 5.1 Validation
+### 5.2 CitationEvent (The Act of Introduction)
+Represents how a Source was linked to a Topic.
+- `source_id`
+- `event_type` (e.g., explicitly submitted, socially observed, admin imported)
+- `identity_id` (who submitted/shared it)
+- `weight_modifier` (e.g., an explicit submission carries more weight than a passive social share)
+- `created_at`
+
+### 5.3 Validation
 
 Each citation must be: - Reachable (HTTP 200) - Content-extracted -
 Stored as a snapshot hash - Re-checked periodically
@@ -88,28 +103,31 @@ Dead or altered sources reduce weight automatically.
 
 ## 6. Public Rubric System
 
-Each citation is scored across dimensions.
+**The Rubric is the core product.** It is what separates Centipedia from a black-box AI content farm. Centipedia does not claim ideological neutrality; it claims mathematical, structural transparency. 
+
+Each citation is scored across dimensions to compute a "Trust Weight".
 
 Example rubric dimensions:
 
-1.  Relevance to topic (semantic similarity score)
-2.  Depth of coverage (extent of topic focus)
-3.  Source reliability (domain credibility classification)
-4.  Community confidence (upvotes/downvotes weighted by reputation)
-5.  Freshness (recency weighting)
-6.  Liveness (active and unchanged source)
+1.  Primary Source Status (e.g., court documents, data sets, original research)
+2.  Relevance to topic (semantic similarity score)
+3.  Depth of coverage (extent of topic focus)
+4.  Source reliability (domain credibility classification)
+5.  Cross-Source Corroboration (does the claim appear independently across diverse domains?)
+6.  Community confidence (upvotes/downvotes weighted by reputation)
+7.  Freshness & Liveness (active and unchanged source)
 
 Each dimension has: - Defined scoring method - Numeric range - Weight
 coefficient
 
 The total weight is computed as:
 
-Total Weight = (Relevance × A) + (Depth × B) + (Reliability × C) +
-(Community × D) + (Freshness × E) + (Liveness × F)
+Total Weight = (Relevance × A) + (Corroboration × B) + (Reliability × C) + ...
 
-Rubric versions are published and versioned.
-
-Each article stores the rubric version used.
+**Transparency Mandates:**
+- Rubric logic is published and strictly versioned.
+- Each article stores the rubric version used during generation.
+- Users must be able to inspect *why* a source was weighted high or low.
 
 ------------------------------------------------------------------------
 
@@ -127,19 +145,21 @@ The graph is inspectable by users.
 
 ## 8. AI Synthesis Engine
 
+AI orchestration must be treated as a deterministic pipeline isolated in service objects (e.g., `app/services/ai/`), not coupled to controllers. 
+
 AI constraints:
 
 -   May ONLY use provided citation text.
--   Must attribute claims.
--   Must state conflicts between sources.
--   Must omit unsupported facts.
+-   Must attribute claims directly to highly-weighted sources.
+-   Must explicitly surface minority views and conflicting evidence if source weight meets the threshold.
+-   Must omit unsupported facts entirely.
 -   Must avoid normative or persuasive language.
--   Must proportionally reflect citation weights.
+-   Must proportionally reflect citation weights without imposing independent LLM training bias.
 
-AI prompt includes: - Topic - Weighted citation summaries - Explicit
-synthesis rules - Required structured output format
+AI pipeline steps include: 
+- Topic classification → Claim extraction → Stance detection → Rubric evaluation → Article drafting.
 
-Output format must be structured (e.g., JSON schema).
+Output format must be strictly structured (e.g., JSON schema) to allow UI rendering to trace prose back to specific `CitationEvent` records.
 
 ------------------------------------------------------------------------
 

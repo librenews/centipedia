@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  source: one
+  topic: one
+  user: alice
+  event_type: "submitted"
+  url_base_score: 5.0
+  domain_multiplier: 1.0
+  corroboration_multiplier: 1.0
+  total_weight: 5.0
+  rubric_version: "1.0.0"
+
+two:
+  source: two
+  topic: two
+  user: alice
+  event_type: "submitted"
+  url_base_score: 8.0
+  domain_multiplier: 1.0
+  corroboration_multiplier: 1.5
+  total_weight: 12.0
+  rubric_version: "1.0.0"

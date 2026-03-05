@@ -1,0 +1,19 @@
+<div class="content-block">
+  <h1>Submit Evidence</h1>
+  <p class="subtitle">Submit a canonical URL to support or dispute the synthesis for <strong><%= @topic.title %></strong>.</p>
+  
+  <div class="rubric-reminder">
+    <p><strong>Reminder:</strong> Quality matters. Citations are scored based on the mathematical <%= link_to 'Centipedia Rubric', rubric_path %>, prioritizing primary sources, data density, and verifiable claims over editorial opinion.</p>
+  </div>
+
+  <%= form_with url: topic_citation_events_path(@topic), class: "login-form" do |form| %>
+    <div class="form-group">
+      <%= form.label :canonical_url, "Canonical URL" %>
+      <%= form.url_field :canonical_url, placeholder: "https://...", required: true, class: "form-control" %>
+      <small class="form-text">Provide the most direct, original source available.</small>
+    </div>
+    
+    <%= form.submit "Queue for Scoring", class: "btn" %>
+    <%= link_to "Cancel", topic_path(@topic), class: "btn-subtle" %>
+  <% end %>
+</div>

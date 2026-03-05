@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :topics, only: [ :index, :show ], param: :slug do
+    resources :citation_events, only: [ :new, :create ]
+  end
+  get "/rubric", to: "rubric#index"
   # Health check
   get "up" => "rails/health#show", as: :rails_health_check
 
